@@ -1,5 +1,14 @@
 $(document).ready(function() {
     // Function to handle login
+    // $('#login-btn').click(function() {
+    //     // Redirect user to Google OAuth2 authentication page
+    //     window.location.href = 'https://accounts.google.com/o/oauth2/auth' +
+    //     '?client_id=1044089846115-735carm437viiu23ej4hh8pcodogd5ak.apps.googleusercontent.com' +
+    //     '&redirect_uri=http://localhost' +
+    //     '&scope=https://www.googleapis.com/auth/youtube' +
+    //     '&response_type=code';    
+    // });
+
     $('#login-btn').click(async function() {
         const username = $('#username').val();
         const password = $('#password').val();
@@ -33,9 +42,29 @@ function authenticate(username, password) {
         }
     });
 }
+// function handleAuthenticated() {
+//     fetchActivityReports();
+//     fetchComments();
+//     fetchChannelName();
+// }
+
 
 let VIDEO_ID = 'Yj4FgtE3d2M';
 
+// Function to fetch data from YouTube API
+async function fetchData(url) {
+    const API_KEY = 'AIzaSyA0avnK4_PFEznBpN_sct2C-oMby1KOwXQ'; // YouTube Data API key
+
+    try {
+        const response = await fetch(`${url}&key=${API_KEY}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 // Function to remove a comment
 async function removeComment(commentId) {
     const url = `https://www.googleapis.com/youtube/v3/comments/delete?part=snippet&id=${commentId}`;
@@ -70,8 +99,9 @@ async function replyToComment() {
     }
 }
 
+// Function to insert a comment
 async function insertComment(videoId, commentText) {
-    const url = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&key=${'AIzaSyA0avnK4_PFEznBpN_sct2C-oMby1KOwXQ'}`;
+    const url = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&key=${'YOUR_API_KEY'}`;
     const requestBody = {
         snippet: {
             videoId: videoId,
@@ -170,20 +200,5 @@ async function fetchComments() {
         $('#comment-section').removeClass('hidden');
     } catch (error) {
         console.error('Error fetching comments:', error);
-    }
-}
-
-// Function to fetch data from YouTube API
-async function fetchData(url) {
-    const API_KEY = 'AIzaSyA0avnK4_PFEznBpN_sct2C-oMby1KOwXQ'; // YouTube Data API key
-
-    try {
-        const response = await fetch(`${url}&key=${API_KEY}`);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data: ${response.statusText}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching data:', error);
     }
 }
